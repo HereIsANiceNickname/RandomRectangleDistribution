@@ -1,6 +1,7 @@
 package utils;
 
 import java.awt.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,8 +48,10 @@ public class Rectangle {
 
 
     public boolean fitsIn(Rectangle other) {
-        return this.rectangle.contains(other.rectangle);
+        return rectangle.width <= other.rectangle.width &&
+                rectangle.height <= other.rectangle.height;
     }
+
 
     public List<Point> possiblePositions(Rectangle toPlace) {
         List<Point> positions = new ArrayList<>();
@@ -84,6 +87,24 @@ public class Rectangle {
                 Objects.equals(rightBottom, rectangle.rightBottom);
     }
 
+    public boolean isIn(Rectangle that){
+        return this.rectangle.x <=that.rectangle.x &&
+                this.rectangle.y <=that.rectangle.y &&
+                this.rectangle.width <= that.rectangle.width&&
+                this.rectangle.height <= that.rectangle.height;
+    }
+
+    private java.awt.Rectangle shrinked(java.awt.Rectangle rectangle) {
+        Integer x = positionDecrease(rectangle.x);
+        Integer y = positionDecrease(rectangle.y);
+        return new java.awt.Rectangle(x, y, rectangle.width-2, rectangle.height-2);
+
+    }
+
+    private Integer positionDecrease(int x) {
+        return x+1;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(leftTop, rightBottom);
@@ -91,17 +112,17 @@ public class Rectangle {
 
     @Override
     public String toString() {
-        return "Quad{  p1="+ leftTop.toString()+", p2="
-                + rightTop.toString()+ ", p3="
-                + rightBottom.toString()+ ", p4="
-                + leftBottom.toString()+ "}";
+        return "Quad{  pos="+ leftTop.toString() + ", " +
+                "DimX=" + dimensionX + ", " +
+                "DimY=" + dimensionY + " }";
     }
 
     public List<Rectangle> splitBy(Rectangle splitter) {
+        splitter = splitter.fitTo(this);
         List<Rectangle> splits = new ArrayList<>();
         //top
         Point p1s = this.leftTop;
-        Point p1e = new Point(splitter.right, splitter.top);
+        Point p1e = new Point(this.right, splitter.top);
         Rectangle top = new Rectangle(p1s, p1e);
         tryToAddQuad(splitter, top, splits);
         //Left
@@ -115,7 +136,7 @@ public class Rectangle {
         Rectangle right = new Rectangle(p3s, p3e);
         tryToAddQuad(splitter, right, splits);
         //Bottom
-        Point p4s = new Point(splitter.left, splitter.bottom);
+        Point p4s = new Point(this.left, splitter.bottom);
         Point p4e = this.rightBottom;
         Rectangle bottom = new Rectangle(p4s, p4e);
         tryToAddQuad(splitter, bottom, splits);
@@ -123,11 +144,23 @@ public class Rectangle {
         return splits;
 
     }
+
+    public Rectangle fitTo(Rectangle that) {
+        Point start = new Point(Math.max(this.left, that.left ),
+                Math.max(this.top, that.top));
+        Point end = new Point(Math.min(this.right, that.right ),
+                Math.min(this.bottom, that.bottom));
+        return new Rectangle(start, end);
+    }
+
     private void tryToAddQuad(Rectangle splitter, Rectangle toAdd, List<Rectangle> result){
-        if(toAdd.area > 0.0 && this.rectangle.contains(splitter.rectangle)){
+        if(toAdd.area > 0.0){
             result.add(toAdd);
         }
     }
+
+
+
 
 
     public Rectangle onPosition(Point position) {

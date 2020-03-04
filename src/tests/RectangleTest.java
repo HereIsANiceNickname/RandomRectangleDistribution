@@ -6,7 +6,9 @@ import utils.Pair;
 import utils.Rectangle;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class RectangleTest {
 
@@ -35,12 +37,19 @@ class RectangleTest {
     }
 
     @Test
-    void testIntersectLeftTopCorner(){
+    void testIntersectSelf(){
+        Rectangle q1 = new Rectangle(new Point(5, 5), new Point(10, 10));
+        Assertions.assertTrue(q1.intersects(q1));
+    }
+
+    @Test
+    void testIntersectLeftTopCorner() {
         Rectangle q1 = new Rectangle(new Point(5, 5), new Point(10, 10));
         Rectangle q2 = new Rectangle(new Point(0, 0), new Point(7, 7));
 
         Assertions.assertTrue(q1.intersects(q2));
     }
+
     @Test
     void testIntersectOnlyTopCorner(){
         Rectangle q1 = new Rectangle(new Point(5, 5), new Point(10, 10));
@@ -164,6 +173,16 @@ class RectangleTest {
     }
 
     @Test
+    void testSplitOverlapping1_1(){
+        Rectangle q1 = new Rectangle(new Point(0, 1), new Point(3, 2));
+        Rectangle q2 = new Rectangle(new Point(1, 0), new Point(2, 3));
+
+        List<Rectangle> result =  q1.splitBy(q2);
+
+        Assertions.assertEquals(2, result.size());
+    }
+
+    @Test
     void testFits(){
         Rectangle q1 = new Rectangle(new Point(0, 0), new Point(8, 8));
         Rectangle q2 = new Rectangle(new Point(0, 0), new Point(8, 8));
@@ -187,6 +206,22 @@ class RectangleTest {
 
         Assertions.assertTrue(q2.fitsIn(q1));
     }
+
+    @Test
+    void fitsTo(){
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(8, 8));
+        Rectangle q2 = new Rectangle(new Point(-2, -2), new Point(4, 4));
+        Rectangle expected = new Rectangle(new Point(0, 0), new Point(4, 4));
+        Assertions.assertEquals(expected, q2.fitTo(q1));
+    }
+
+    @Test
+    void fitsTo2(){
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(8, 8));
+        Rectangle q2 = new Rectangle(new Point(-4, -4), new Point(14, 14));
+
+        Assertions.assertEquals(q1, q2.fitTo(q1));
+    }
     @Test
     void testSplitOverlapping2(){
         Rectangle q1 = new Rectangle(new Point(0, 0), new Point(8, 8));
@@ -194,6 +229,24 @@ class RectangleTest {
         List<Rectangle> result =  q1.splitBy(q2);
 
         Assertions.assertEquals(1, result.size());
+    }
+
+    @Test
+    void testConcreteOverlap(){
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(3, 3));
+        Rectangle q2 = new Rectangle(new Point(1, -2), new Point(2, 2));
+
+        Rectangle r1 = new Rectangle(new Point(0, 0), new Point(1, 3));
+        Rectangle r2 = new Rectangle(new Point(2, 0), new Point(3, 3));
+        Rectangle r3 = new Rectangle(new Point(0, 2), new Point(3, 3));
+        Set<Rectangle> result =  new HashSet<>(q1.splitBy(q2));
+        Set<Rectangle> expected = new HashSet<>();
+        expected.add(r1);
+        expected.add(r2);
+        expected.add(r3);
+
+
+        Assertions.assertEquals(expected, result);
     }
 
     @Test
