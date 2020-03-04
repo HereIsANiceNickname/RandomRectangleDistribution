@@ -1,28 +1,29 @@
 package tests;
 
 import org.junit.jupiter.api.Test;
-import utils.Node;
+import datastructures.Node;
 import utils.Pair;
-import utils.Quad;
+import utils.Rectangle;
 import utils.QuadMaskingTree;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuadMaskingTreeTest {
+class RectangleMaskingTreeTest {
 
     @Test
     void getAllNodesOne() {
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(16., 16.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(16, 16));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         assertEquals(1, tree.getAllNodes().size());
     }
     @Test
     void getAllNodesTwo() {
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(16., 16.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(16, 16));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.getRoot().addChild(q1);
@@ -31,7 +32,7 @@ class QuadMaskingTreeTest {
     }
     @Test
     void getAllNodesThreeInDepth() {
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(16., 16.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(16, 16));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.getRoot().addChild(q1);
@@ -41,7 +42,7 @@ class QuadMaskingTreeTest {
     }
     @Test
     void getAllNodes1X4X4() {
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(16., 16.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(16, 16));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.getRoot().addChild(q1);
@@ -60,8 +61,8 @@ class QuadMaskingTreeTest {
     }
     @Test
     void possiblePositions(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(16., 16.));
-        Quad q2 = new Quad(new Pair<>(0., 0.), new Pair<>(1., 1.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(16, 16));
+        Rectangle q2 = new Rectangle(new Point(0, 0), new Point(1, 1));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.getRoot().addChild(q1);
@@ -81,9 +82,10 @@ class QuadMaskingTreeTest {
 
     @Test
     void splitTree(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(8., 8.));
-        Quad q2 = new Quad(new Pair<>(4., 4.), new Pair<>(6., 6.));
-        Quad q3 = new Quad(new Pair<>(1., 1.), new Pair<>(3., 3.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(8, 8));
+        
+        Rectangle q2 = new Rectangle(new Point(4, 4), new Point(6, 6));
+        Rectangle q3 = new Rectangle(new Point(1, 1), new Point(3, 3));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.splitNode(q2);
@@ -94,8 +96,8 @@ class QuadMaskingTreeTest {
     }
     @Test
     void splitTreeNotOverlapping(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(4., 4.));
-        Quad q2 = new Quad(new Pair<>(4., 4.), new Pair<>(6., 6.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(4, 4));
+        Rectangle q2 = new Rectangle(new Point(4, 4), new Point(6, 6));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
         tree.splitNode(q2);
         System.out.println(tree.getAllNodes());
@@ -105,9 +107,9 @@ class QuadMaskingTreeTest {
     }
     @Test
     void splitTreeExt(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(8., 8.));
-        Quad q2 = new Quad(new Pair<>(4., 4.), new Pair<>(6., 6.));
-        Quad q3 = new Quad(new Pair<>(0., 0.), new Pair<>(3., 3.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(8, 8));
+        Rectangle q2 = new Rectangle(new Point(4, 4), new Point(6, 6));
+        Rectangle q3 = new Rectangle(new Point(0, 0), new Point(3, 3));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.splitNode(q2);
@@ -119,8 +121,8 @@ class QuadMaskingTreeTest {
 
     @Test
     void splitTreeImPossiblePos1(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(4., 4.));
-        Quad q2 = new Quad(new Pair<>(0., 0.), new Pair<>(1., 1.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(4, 4));
+        Rectangle q2 = new Rectangle(new Point(0, 0), new Point(1, 1));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.splitNode(q1);
@@ -130,8 +132,8 @@ class QuadMaskingTreeTest {
     }
     @Test
     void splitTreeImPossiblePos2(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(4., 4.));
-        Quad q2 = new Quad(new Pair<>(0., 0.), new Pair<>(1., 1.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(4, 4));
+        Rectangle q2 = new Rectangle(new Point(0, 0), new Point(1, 1));
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.splitNode(q1);
@@ -142,8 +144,8 @@ class QuadMaskingTreeTest {
 
     @Test
     void splitTreePossiblePos2(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(4., 4.));
-        Quad q2 = new Quad(new Pair<>(2., 2.), new Pair<>(4., 4.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(4, 4));
+        Rectangle q2 = new Rectangle(new Point(2, 2), new Point(4, 4));
 
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
@@ -156,15 +158,15 @@ class QuadMaskingTreeTest {
 
     @Test
     void splitTreePossiblePos3(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(4., 4.));
-        Quad q2 = new Quad(new Pair<>(2., 2.), new Pair<>(4., 4.));
-        Quad q3 = new Quad(new Pair<>(2., 0.), new Pair<>(2., 2.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(4, 4));
+        Rectangle q2 = new Rectangle(new Point(2, 2), new Point(4, 4));
+        Rectangle q3 = new Rectangle(new Point(2, 0), new Point(2, 2));
 
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
         tree.splitNode(q2);
         tree.splitNode(q3);
-        for(Node n : tree.getAllLeaves()){
+        for(Node<Rectangle> n : tree.getAllLeaves()){
             System.out.println(n.getValue().area);
 
         }
@@ -176,9 +178,9 @@ class QuadMaskingTreeTest {
 
     @Test
     void splitTreePossiblePos3_1(){
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(2., 2.));
-        Quad q2 = new Quad(new Pair<>(1., 1.), new Pair<>(2., 2.));
-        Quad q3 = new Quad(new Pair<>(1., 0.), new Pair<>(1., 1.));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(2, 2));
+        Rectangle q2 = new Rectangle(new Point(1, 1), new Point(2, 2));
+        Rectangle q3 = new Rectangle(new Point(1, 0), new Point(1, 1));
 
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
@@ -192,23 +194,23 @@ class QuadMaskingTreeTest {
 
     //@Test
     void generateFittingQuadsSimple(){
-        Quad root = new Quad(new Pair<>(0., 0.), new Pair<>(5., 3.));
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(2., 3.));
-        Quad q2 = new Quad(new Pair<>(0., 0.), new Pair<>(1., 1.));
+        Rectangle root = new Rectangle(new Point(0, 0), new Point(5, 3));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(2, 3));
+        Rectangle q2 = new Rectangle(new Point(0, 0), new Point(1, 1));
 
-        List<Quad> quads = new ArrayList<>();
+        List<Rectangle> rectangles = new ArrayList<>();
 
-        quads.add(q1);
-        quads.add(q1);
-        quads.add(q2);
+        rectangles.add(q1);
+        rectangles.add(q1);
+        rectangles.add(q2);
 
         QuadMaskingTree tree = new QuadMaskingTree(root);
 
-        quads = tree.generateFittingQuads(quads);
+        rectangles = tree.generateFittingQuads(rectangles);
 
-        System.out.println(quads.get(0).leftTop + " " + quads.get(0).area);
-        System.out.println(quads.get(1).leftTop + " " + quads.get(1).area);
-        System.out.println(quads.get(2).leftTop + " " + quads.get(2).area);
+        System.out.println(rectangles.get(0).leftTop + " " + rectangles.get(0).area);
+        System.out.println(rectangles.get(1).leftTop + " " + rectangles.get(1).area);
+        System.out.println(rectangles.get(2).leftTop + " " + rectangles.get(2).area);
 
         assertEquals(2.0, tree.getCurrentArea());
 
@@ -217,23 +219,23 @@ class QuadMaskingTreeTest {
 
     //@Test
     void generateFittingQuadsSimpleList(){
-        Quad root = new Quad(new Pair<>(0., 0.), new Pair<>(5., 3.));
-        Quad q1 = new Quad(new Pair<>(0., 0.), new Pair<>(2., 3.));
-        Quad q2 = new Quad(new Pair<>(0., 0.), new Pair<>(1., 1.));
+        Rectangle root = new Rectangle(new Point(0, 0), new Point(5, 3));
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(2, 3));
+        Rectangle q2 = new Rectangle(new Point(0, 0), new Point(1, 1));
 
-        List<Quad> quads = new ArrayList<>();
+        List<Rectangle> rectangles = new ArrayList<>();
 
-        quads.add(q1);
-        quads.add(q1);
-        quads.add(q2);
+        rectangles.add(q1);
+        rectangles.add(q1);
+        rectangles.add(q2);
 
         QuadMaskingTree tree = new QuadMaskingTree(root);
 
-        quads = tree.generateFittingQuads(quads);
+        rectangles = tree.generateFittingQuads(rectangles);
 
-        System.out.println(quads.get(0).leftTop + " " + quads.get(0).area);
-        System.out.println(quads.get(1).leftTop + " " + quads.get(1).area);
-        System.out.println(quads.get(2).leftTop + " " + quads.get(2).area);
+        System.out.println(rectangles.get(0).leftTop + " " + rectangles.get(0).area);
+        System.out.println(rectangles.get(1).leftTop + " " + rectangles.get(1).area);
+        System.out.println(rectangles.get(2).leftTop + " " + rectangles.get(2).area);
 
         assertEquals(2.0, tree.getCurrentArea());
 

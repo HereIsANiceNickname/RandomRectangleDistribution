@@ -1,18 +1,20 @@
-package utils;
+package datastructures;
+
+import utils.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Node {
+public class Node<E>{
     private static Integer numberOfNodes = 0;
     private int id;
-    private Quad value;
-    private Node parent;
-    private List<Node> children = new ArrayList<>();
+    private E value;
+    private Node<E> parent;
+    private List<Node<E>> children = new ArrayList<>();
     private boolean touched;
 
-    public Node(Quad q){
+    public Node(E q){
         this.id = createId();
         this.value = q;
         this.parent = this;
@@ -23,11 +25,11 @@ public class Node {
         return id;
     }
 
-    public Quad getValue() {
+    public E getValue() {
         return value;
     }
 
-    public Node getParent() {
+    public Node<E> getParent() {
         return parent;
     }
 
@@ -46,7 +48,7 @@ public class Node {
     public boolean isRoot(){
         return this.parent.equals(this);
     }
-    public Node(Quad q, Node parent){
+    public Node(E q, Node<E> parent){
         this.id = createId();
         this.value = q;
         this.parent = parent;
@@ -59,15 +61,15 @@ public class Node {
         }
         return id;
     }
-    public void addChild(Quad quad){
-        this.children.add(new Node(quad, this));
+    public void addChild(E e){
+        this.children.add(new Node<E>(e, this));
     }
-    public void addChildren(List<Quad> quads){
-        for(Quad quad: quads){
-            addChild(quad);
+    public void addChildren(List<E> es){
+        for(E e : es){
+            addChild(e);
         }
     }
-    public List<Node> getChildren(){
+    public List<Node<E>> getChildren(){
         return children;
     }
 
@@ -75,7 +77,7 @@ public class Node {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Node node = (Node) o;
+        Node<E> node = (Node<E>) o;
         return id == node.id;
     }
 
