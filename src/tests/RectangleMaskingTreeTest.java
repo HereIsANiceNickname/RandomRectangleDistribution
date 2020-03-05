@@ -162,9 +162,8 @@ class RectangleMaskingTreeTest {
 
         QuadMaskingTree tree = new QuadMaskingTree(q1);
 
-        System.out.println(tree.splitNode(q2));
-        System.out.println(
-                tree.splitNode(q3));
+        tree.splitNode(q2);
+        tree.splitNode(q3);
 
         assertEquals(3, tree.getAllPossiblePositions(q2).size());
 
@@ -221,7 +220,7 @@ class RectangleMaskingTreeTest {
         QuadMaskingTree tree = new QuadMaskingTree(root);
 
         rectangles = tree.generateFittingQuads(rectangles);
-
+        System.out.println(rectangles);
         assertEquals(2.0, tree.getCurrentArea());
 
 

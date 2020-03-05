@@ -21,36 +21,33 @@ public class QuadMaskingTree {
     }
 
     public List<Rectangle> generateFittingQuads(List<Rectangle> rectangles) {
-        List<Rectangle> results = new ArrayList<>();
+        Rectangle results[] = new Rectangle[rectangles.size()];
+        Snapshot backtracks[] = new Snapshot[rectangles.size()];
         rectangles.sort((Rectangle o1, Rectangle o2) -> r.nextInt(3) - 1);
 
-        Stack<Snapshot> backtracks = new Stack<>();
-        backtracks.push(createSnapshot(rectangles.get(0), backtracks, -1));
 
-        for (int i = 0; i < rectangles.size(); ) {
+        for (int i = 0; i < rectangles.size() && i>=0; ) {
             Rectangle rectangle = rectangles.get(i);
-            Snapshot s = backtracks.peek();
+            Snapshot s = createSnapshot(rectangle, backtracks, i);
 
-            if (fits(rectangle, s)) {
-                processQuad(s);
-                backtracks.push(s);
-                s = createSnapshot(rectangles.get(i + 1), backtracks, i);
+            if (fits(s)) {
+                results[i] = processQuad(s);
                 area -= rectangle.area;
+                //if (i+1 >= rectangles.size()){
+                //    break;
+                //}
+                //s = createSnapshot(rectangles.get(i+1), backtracks, i);
+                //backtracks.push(s);
+                i++;
+
             } else {
                 fallback(s);
-                if (s.getPositions().isEmpty()) {
-                    backtracks.pop();
-                }
+                backtracks[i] = null;
                 area += rectangle.area;
+                i--;
             }
-            i = backtracks.size();
         }
-
-        for (Snapshot s : backtracks) {
-            results.add(s.rectangle);
-        }
-
-        return results;
+        return Arrays.asList(results);
     }
 
 
@@ -75,20 +72,20 @@ public class QuadMaskingTree {
         return movedRectangle;
     }
 
-    private Snapshot createSnapshot(Rectangle rectangle, Stack<Snapshot> backtracks, int i) {
+    private Snapshot createSnapshot(Rectangle rectangle, Snapshot[] backtracks, int i) {
 
-        if (i + 1 == backtracks.size() && !backtracks.empty()) {
-            return backtracks.pop();
+        if (backtracks[i] != null) {
+            return backtracks[i];
         } else {
             Snapshot snap = new Snapshot(rectangle);
             snap.getPositions().addAll(getAllPossiblePositions(rectangle));
-
+            backtracks[i] = snap;
             return snap;
         }
     }
 
-    private boolean fits(Rectangle rectangle, Snapshot snap) {
-        return rectangle.area <= area && snap.getPositions().size() > 0;
+    private boolean fits(Snapshot snap) {
+        return snap.rectangle.area <= area && snap.getPositions().size() > 0;
     }
 
     public List<Node<Rectangle>> splitNode(Point pos, Rectangle rectangle) {
