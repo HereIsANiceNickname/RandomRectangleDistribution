@@ -65,12 +65,6 @@ public class Rectangle {
             for (int y = 0; y <= yBorder; y++) {
                 Integer xPos =  this.left + x;
                 Integer yPos = this.top + y;
-                if(xPos == 0.0 && yPos == 1.0){
-                    System.out.println("QuadThat = "+ toPlace);
-                    System.out.println("QuadThis = "+ this);
-                    System.out.println("Left ="+ this.left+ " X = "+x);
-                    System.out.println("Top ="+ this.top+ " Y = "+y);
-                }
                 positions.add(new Point(xPos, yPos));
             }
         }
@@ -166,4 +160,5 @@ public class Rectangle {
     public Rectangle onPosition(Point position) {
         return new Rectangle(position, new Point(position.x+dimensionX, position.y+dimensionY));
     }
+
 }

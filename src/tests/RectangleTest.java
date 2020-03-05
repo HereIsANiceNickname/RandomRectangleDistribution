@@ -49,7 +49,13 @@ class RectangleTest {
 
         Assertions.assertTrue(q1.intersects(q2));
     }
+    @Test
+    void testIntersectLeftSide() {
+        Rectangle q1 = new Rectangle(new Point(0, 0), new Point(4, 2));
+        Rectangle q2 = new Rectangle(new Point(2, 0), new Point(4, 2));
 
+        Assertions.assertTrue(q1.intersects(q2));
+    }
     @Test
     void testIntersectOnlyTopCorner(){
         Rectangle q1 = new Rectangle(new Point(5, 5), new Point(10, 10));

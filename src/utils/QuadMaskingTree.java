@@ -1,20 +1,22 @@
 package utils;
 
 import datastructures.Node;
+import datastructures.Tree;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class QuadMaskingTree {
-    private Node<Rectangle> root = null;
+    private Tree<Rectangle> tree = null;
     private Integer area = 0;
     private final Random r = new Random();
 
 
     public QuadMaskingTree(Rectangle rootRectangle) {
-        root = new Node<Rectangle>(rootRectangle);
+        tree = new Tree<Rectangle>(rootRectangle);
         area = rootRectangle.area;
     }
 
@@ -89,9 +91,8 @@ public class QuadMaskingTree {
         return rectangle.area <= area && snap.getPositions().size() > 0;
     }
 
-    public List<Node<Rectangle>> splitNode(Point pos, Rectangle q) {
-        Rectangle rectangle = new Rectangle(pos, new Point(pos.x + q.dimensionX, pos.y + q.dimensionY));
-        return splitNode(rectangle);
+    public List<Node<Rectangle>> splitNode(Point pos, Rectangle rectangle) {
+        return splitNode(rectangle.onPosition(pos));
     }
 
     public List<Node<Rectangle>> splitNode(Rectangle rectangle) {
@@ -107,51 +108,12 @@ public class QuadMaskingTree {
     }
 
     private List<Node<Rectangle>> getIntersectingNodes(Rectangle rectangle) {
-        List<Node<Rectangle>> result = new ArrayList<>();
-
-        for (Node<Rectangle> node : getUntouchedLeaves()) {
-            if (rectangle.intersects(node.getValue())) {
-                result.add(node);
-            }
-        }
-
-        return result;
+        return this.getUntouchedLeaves().stream().
+                filter(n->rectangle.intersects(n.getValue())).collect(Collectors.toList());
     }
 
-    public List<Node<Rectangle>> getAllNodes() {
-        Set<Node<Rectangle>> nodes = new HashSet<>();
-        Set<Node<Rectangle>> changes = new HashSet<>();
-        changes.add(root);
-
-        while (!changes.equals(nodes)) {
-            nodes.addAll(changes);
-            for (Node<Rectangle> n : nodes) {
-                changes.addAll(n.getChildren());
-            }
-        }
-
-        return new ArrayList<>(nodes);
-    }
-
-    public List<Node<Rectangle>> getAllLeaves() {
-        return gatherNodes((n)->n.getChildren().isEmpty());
-    }
-
-    public List<Node<Rectangle>> getUntouchedLeaves(){
-        return gatherNodes((n)->n.getChildren().isEmpty() && !n.isTouched());
-    }
-
-    private List<Node<Rectangle>> gatherNodes(Function<Node<Rectangle>, Boolean> isSearched){
-        List<Node<Rectangle>> nodes = this.getAllNodes();
-        List<Node<Rectangle>> result = new ArrayList<>();
-
-        for (Node<Rectangle> node : nodes) {
-            if (isSearched.apply(node)) {
-                result.add(node);
-            }
-        }
-
-        return result;
+    public List<Node<Rectangle>> getUntouchedLeaves() {
+        return tree.getAllLeaves().stream().filter(n->!n.isTouched()).collect(Collectors.toList());
     }
 
     public List<Point> getAllPossiblePositions(Rectangle q) {
@@ -167,11 +129,19 @@ public class QuadMaskingTree {
     }
 
     public Node<Rectangle> getRoot() {
-        return root;
+        return tree.getRoot();
     }
 
     public double getCurrentArea() {
         return this.area;
+    }
+
+    public List<Node<Rectangle>> getAllNodes() {
+        return tree.getAllNodes();
+    }
+
+    public List<Node<Rectangle>> getAllLeaves() {
+        return tree.getAllLeaves();
     }
 
     private static class Snapshot {
