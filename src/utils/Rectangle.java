@@ -42,6 +42,11 @@ public class Rectangle {
         area = dimensionX * dimensionY;
     }
 
+    public Rectangle(Point start, int xDim, int yDim){
+        this(start, new Point(start.x+xDim, start.y+yDim));
+
+    }
+
     public boolean intersects(Rectangle other) {
         return this.rectangle.intersects(other.rectangle);
     }

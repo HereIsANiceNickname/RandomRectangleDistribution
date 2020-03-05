@@ -20,7 +20,7 @@ public class QuadMaskingTree {
         area = rootRectangle.area;
     }
 
-    public List<Rectangle> generateFittingQuads(List<Rectangle> rectangles) {
+    public List<Rectangle> generateFittingPositions(List<Rectangle> rectangles) {
         Rectangle results[] = new Rectangle[rectangles.size()];
         Snapshot backtracks[] = new Snapshot[rectangles.size()];
         rectangles.sort((Rectangle o1, Rectangle o2) -> r.nextInt(3) - 1);
@@ -61,8 +61,9 @@ public class QuadMaskingTree {
 
     private Rectangle processQuad(Snapshot snap) {
         List<Point> currentPositions = snap.getPositions();
-        Point position = currentPositions.get(r.nextInt(currentPositions.size()));
-        currentPositions.remove(position);
+        int i = r.nextInt(currentPositions.size());
+        Point position = currentPositions.get(i);
+        currentPositions.remove(i);
 
         Rectangle movedRectangle = snap.rectangle.onPosition(position);
         List<Node<Rectangle>> alteredNodes = splitNode(movedRectangle);
